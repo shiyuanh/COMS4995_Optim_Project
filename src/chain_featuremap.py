@@ -1,6 +1,5 @@
 import numpy as np
 from loadOCR import convert_ocr, load_ocr, loadOCRData
-from IPython import embed
 
 def chain_featuremap(param, x, y):
     data = np.array(x['data'])

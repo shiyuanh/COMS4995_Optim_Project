@@ -2,7 +2,6 @@
 from helpers import *
 import numpy as np
 import time
-from IPython import embed
 
 eps = 1e-6
 

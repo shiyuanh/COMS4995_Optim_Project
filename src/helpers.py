@@ -1,5 +1,4 @@
 import numpy as np
-from IPython import embed
 
 def objective_function(w, b_alpha, lambd):
     return lambd / 2. * w.dot(w) - b_alpha
@@ -41,7 +40,6 @@ def duality_gap(param, maxOracle, model, lambd):
     w_s /= lambd * n
     l_s /= n
     gap = lambd * w.dot(w - w_s) - l + l_s
-    # embed()
     return gap, w_s, l_s
 
 def primal_objective(param, maxOracle, model, lambd):
