@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Author: yuchen
-# @Date:   2019-11-23 16:10:16
-# @Last Modified by:   yuchen
-# @Last Modified time: 2019-11-23 20:26:01
 
 from helpers import *
 import numpy as np
@@ -42,7 +37,7 @@ def solverFW(param, options=None):
     # Init
     model = {}
     progress={}
-    model['w'] = np.zeros((d, 1))
+    model['w'] = np.zeros((d, ))
     w_mat = np.zeros((d, n))
 
     model['l'] = 0.
@@ -60,7 +55,7 @@ def solverFW(param, options=None):
     tic = time.time()
     # Main loop
     for k in range(options['num_passes']):
-        w_s = np.zeros((d, 1))
+        w_s = np.zeros((d, ))
         l_s = 0
         for i in range(n):
             ystar_i = maxOracle(param, model, patterns[i], labels[i])
@@ -72,12 +67,12 @@ def solverFW(param, options=None):
 
         gap = lambd * (model['w'].dot(model['w'] - w_s)) - (model['l'] - l_s)
         if options['do_line_search']:
-            gamma_opt = gap / (lambd * ((model.w - w_s).dot(model.w - w_s) + eps))
+            gamma_opt = gap / (lambd * ((model['w'] - w_s).dot(model['w'] - w_s) + eps))
             gamma = max(0, min(1, gamma_opt))
         else:
             gamma = 2. / (k + 2)
 
-        if gap <= options.gap_threshold:
+        if gap <= options['gap_threshold']:
             print("Duality gap below threshold -- stopping!")
             print("Current gap: {}, gap_threshold: {}\n".format(gap, options["gap_threshold"]))
             print("Reached at iteration {}".format(k))
@@ -87,12 +82,14 @@ def solverFW(param, options=None):
 
         model['w'] = (1 - gamma) * model['w'] + gamma * w_s
         model['l'] = (1 - gamma) * model['l'] + gamma * l_s
+        embed()
 
         if options['debug']:
             f = -objective_function(model['w'], model['l'], lambd)
-            gap = duality_gap(param, maxOracle, model, lambd)
+            gap, _, _ = duality_gap(param, maxOracle, model, lambd)
             primal = f + gap
             train_error = average_loss(param, maxOracle, model)
+
             print("Pass {} (iteration {}), SVM primal = {:.6f}, SVM dual = {:.6f}, duality gap = {:.6f}, train error = {:.6f}".format(
                 k+1, k+1, primal, f, gap, train_error))
 
@@ -101,7 +98,7 @@ def solverFW(param, options=None):
             progress['eff_pass'].append(k)
             progress['train_error'].append(train_error)
 
-            if isinstance(options['test_data'], dict) and 'patterns' in options['test_data']:
+            if 'test_data' in options and isinstance(options['test_data'], dict) and 'patterns' in options['test_data']:
                 param_debug = param.copy()
                 param_debug['patterns'] = options['test_data']['patterns']
                 param_debug['labels'] = options['test_data']['labels']

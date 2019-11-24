@@ -1,10 +1,5 @@
-# -*- coding: utf-8 -*-
-# @Author: yuchen
-# @Date:   2019-11-23 16:50:13
-# @Last Modified by:   yuchen
-# @Last Modified time: 2019-11-23 19:25:51
-
 import numpy as np
+from IPython import embed
 
 def objective_function(w, b_alpha, lambd):
     return lambd / 2. * w.dot(w) - b_alpha
@@ -34,16 +29,16 @@ def duality_gap(param, maxOracle, model, lambd):
     n = len(patterns)
     ystars = []
     for i in range(n):
-        ystars.append(maxOracle(param, model, patterns[i], labels[i]))
+        ystars.append(maxOracle(param, model, patterns[i], labels[i], debug=False))
 
-    w_s = np.zeros((w, ))
+    w_s = np.zeros((len(w), ))
     l_s = 0.
     for i in range(n):
-        w_s += (phi(param, patterns[i], labels[i]) - phi(patterns, patterns[i], ystars[i]))
+        w_s += phi(param, patterns[i], labels[i]) - phi(patterns, patterns[i], ystars[i])
         l_s += loss(param, labels[i], ystars[i])
     
     w_s /= lambd * n
     l_s /= n
     gap = lambd * w.dot(w - w_s) - l + l_s
-    
+    # embed()
     return gap, w_s, l_s

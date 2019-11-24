@@ -52,6 +52,7 @@ if __name__ == "__main__":
     parser.add_argument('--num-passes', type=int, default=100)
     parser.add_argument('--do-line-search', action='store_true')
     parser.add_argument('--debug', action='store_true')
+    parser.add_argument('--time-budget', type=int, default=100000000)
 
     options = parser.parse_args()
     ocr(options, 'data/letter.data')
