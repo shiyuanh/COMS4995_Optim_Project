@@ -2,11 +2,12 @@
 # @Author: yuchen
 # @Date:   2019-11-23 16:10:16
 # @Last Modified by:   yuchen
-# @Last Modified time: 2019-11-23 19:37:33
+# @Last Modified time: 2019-11-23 20:26:01
 
 from helpers import *
 import numpy as np
 import time
+from IPython import embed
 
 eps = 1e-6
 

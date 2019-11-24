@@ -2,7 +2,7 @@
 # @Author: yuchen
 # @Date:   2019-11-23 18:48:11
 # @Last Modified by:   yuchen
-# @Last Modified time: 2019-11-23 20:18:55
+# @Last Modified time: 2019-11-23 20:24:14
 
 import numpy as np 
 from IPython import embed
@@ -32,7 +32,7 @@ def chain_oracle(param, model, xi, yi=None):
 
 	label = chain_logDecode(theta_unary.T, theta_pair)
 	label = label.T - 1
-	return label
+	return label.squeeze()
 
 def weightVec2Cell(w, num_states, d):
 	idx = num_states * d
