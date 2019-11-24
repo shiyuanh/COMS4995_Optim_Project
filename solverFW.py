@@ -38,6 +38,7 @@ def solverFW(param, options=None):
 
 	# Init
 	model = {}
+	progress={}
 	model['w'] = np.zeros((d, 1))
 	w_mat = np.zeros((d, n))
 

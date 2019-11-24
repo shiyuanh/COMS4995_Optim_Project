@@ -39,11 +39,11 @@ def duality_gap(param, maxOracle, model, lambd):
     w_s = np.zeros((w, ))
     l_s = 0.
     for i in range(n):
-    	w_s += (phi(param, patterns[i], labels[i]) - phi(patterns, patterns[i], ystars[i]))
-		l_s += loss(param, labels[i], ystars[i])    
+        w_s += (phi(param, patterns[i], labels[i]) - phi(patterns, patterns[i], ystars[i]))
+        l_s += loss(param, labels[i], ystars[i])
     
     w_s /= lambd * n
     l_s /= n
     gap = lambd * w.dot(w - w_s) - l + l_s
     
-	return gap, w_s, l_s
+    return gap, w_s, l_s
