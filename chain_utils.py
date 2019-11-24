@@ -1,4 +1,5 @@
 import numpy as np 
+import time
 from IPython import embed
 
 def chain_loss(param, ytruth, ypredict):
@@ -26,6 +27,7 @@ def chain_oracle(param, model, xi, yi=None, debug=False):
 
     if debug:
         embed()
+        time.sleep(1)
     label = chain_logDecode(theta_unary.T, theta_pair)
     label = label.T
     return label.squeeze()

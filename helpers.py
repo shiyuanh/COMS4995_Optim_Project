@@ -28,6 +28,7 @@ def duality_gap(param, maxOracle, model, lambd):
     
     n = len(patterns)
     ystars = []
+
     for i in range(n):
         ystars.append(maxOracle(param, model, patterns[i], labels[i], debug=False))
 
