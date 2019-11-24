@@ -144,7 +144,7 @@ def solverBCFW(param, options=None):
             model_debug['w'] = w_avg if options['do_weighted_averaging'] else model['w']
             model_debug['l'] = l_avg if options['do_weighted_averaging'] else l
 
-            gap = duality_gap(param, maxOracle, model_debug, lambd)
+            gap, _, __ = duality_gap(param, maxOracle, model_debug, lambd)
             if gap <= options['gap_threshold']:
                 print("Duality gap below threshold -- stopping!")
                 print("Current gap: {}, gap_threshold: {}\n".format(gap, options["gap_threshold"]))

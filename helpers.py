@@ -60,5 +60,5 @@ def primal_objective(param, maxOracle, model, lambd):
         hinge_loss_i = loss_i - model['w'].dot(psi_i)
         assert(hinge_loss_i >= 0.)
         hinge_losses += hinge_loss_i
-    primal = lambd / 2. * (model['w'].dot(model['w']) + hinge_losses / n)
+    primal = lambd / 2. * (model['w'].dot(model['w'])) + hinge_losses / n
     return primal

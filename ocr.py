@@ -49,7 +49,8 @@ def ocr(options, path):
     print("Average loss on the test set: {:.6f}".format(avg_loss))
 
     plt.plot(progress['eff_pass'], progress['primal'], 'r-')
-    plt.plot(progress['eff_pass'], progress['dual'], 'b--')
+    if 'dual' in progress:
+        plt.plot(progress['eff_pass'], progress['dual'], 'b--')
     plt.xlabel("Effective passes")
     plt.savefig("ocr.png")
     plt.show()
@@ -66,7 +67,7 @@ if __name__ == "__main__":
     parser.add_argument('--do-weighted-averaging', action='store_true')
     parser.add_argument('--debug-multiplier', type=float, default=0)
     parser.add_argument('--sample', type=str, default='uniform')
-    parser.add_argument('--gap-check', type=int, default=50)
+    parser.add_argument('--gap-check', type=int, default=10)
     parser.add_argument('--method', choices=['ssg', 'fw', 'bcfw'])
 
     options = parser.parse_args()

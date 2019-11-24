@@ -44,14 +44,13 @@ def solverSSG(param, options=None):
         debug_iter = n
         options['debug_multiplier'] = 100
     else:
-        debug_iter = 1   
+        debug_iter = 1
 
     progress['primal'] = []
     progress['eff_pass'] = []
     progress['train_error'] = []
     if 'test_data' in options and isinstance(options['test_data'], dict) and 'patterns' in options['test_data']:
         progress.test_error = []
-
 
     print("Running SSG on {} examples. The options are as follows:\n{}".format(len(patterns), options))
     tic = time.time()
@@ -79,9 +78,9 @@ def solverSSG(param, options=None):
                 rho = 2. / (k + 2)
                 w_avg = (1 - rho) * w_avg + rho * model['w']
             k += 1
-            if options['debug'] and k >= debug_iter:
+            if options['debug'] and k == debug_iter:
                 model_debug = {}
-                model_debug['w'] = w_avg if options['do_weighted_averaging'] else model['w']
+                model_debug['w'] = w_avg if options['do_weighted_averaging'] else model['w'].copy()
 
                 primal = primal_objective(param, maxOracle, model_debug, lambd)
                 train_error = average_loss(param, maxOracle, model_debug)
@@ -98,7 +97,7 @@ def solverSSG(param, options=None):
                     test_error = average_loss(param_debug, maxOracle, model_debug)
                     progress['test_error'].append(test_error)
 
-                debug_iter = min(debug_iter + n, int(debug_iter + (1 + options['debug_multiplier'] / 100.)))
+                debug_iter = min(debug_iter + n, int(debug_iter + (1 + options['debug_multiplier'] * n / 100.)))
 
             t_elapsed = time.time() - tic
             if (t_elapsed / 60. > options['time_budget']):
