@@ -28,6 +28,7 @@ def duality_gap(param, maxOracle, model, lambd):
     
     n = len(patterns)
     ystars = []
+
     for i in range(n):
         ystars.append(maxOracle(param, model, patterns[i], labels[i], debug=False))
 
@@ -42,3 +43,22 @@ def duality_gap(param, maxOracle, model, lambd):
     gap = lambd * w.dot(w - w_s) - l + l_s
     # embed()
     return gap, w_s, l_s
+
+def primal_objective(param, maxOracle, model, lambd):
+
+    patterns = param['patterns']
+    labels = param['labels']
+    phi = param['featureFn']
+    loss = param['lossFn']
+
+    hinge_losses = 0.
+    n = len(patterns)
+    for i in range(n):
+        ystar_i = maxOracle(param, model, patterns[i], labels[i])
+        loss_i = loss(param, labels[i], ystar_i)
+        psi_i = phi(param, patterns[i], labels[i]) - phi(param, patterns[i], ystar_i)
+        hinge_loss_i = loss_i - model['w'].dot(psi_i)
+        assert(hinge_loss_i >= 0.)
+        hinge_losses += hinge_loss_i
+    primal = lambd / 2. * (model['w'].dot(model['w']) + hinge_losses / n)
+    return primal

@@ -36,7 +36,7 @@ def solverFW(param, options=None):
 
     # Init
     model = {}
-    progress={}
+    progress = {}
     model['w'] = np.zeros((d, ))
     w_mat = np.zeros((d, n))
 
@@ -60,6 +60,7 @@ def solverFW(param, options=None):
         for i in range(n):
             ystar_i = maxOracle(param, model, patterns[i], labels[i])
             psi_i = phi(param, patterns[i], labels[i]) - phi(param, patterns[i], ystar_i)
+            # print(ystar_i)
             w_s += 1. / (lambd * n) * psi_i
             loss_i = loss(param, labels[i], ystar_i)
             l_s += 1. / n * loss_i
@@ -82,7 +83,6 @@ def solverFW(param, options=None):
 
         model['w'] = (1 - gamma) * model['w'] + gamma * w_s
         model['l'] = (1 - gamma) * model['l'] + gamma * l_s
-        embed()
 
         if options['debug']:
             f = -objective_function(model['w'], model['l'], lambd)
