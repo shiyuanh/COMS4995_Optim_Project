@@ -23,8 +23,8 @@ def ocr(options, path):
     }
 
     # model, progress = solverFW(param, options)
-    # model, progress = solverSSG(param, options)
-    model, progress = solverBCFW(param, options)
+    model, progress = solverSSG(param, options)
+    # model, progress = solverBCFW(param, options)
 
     avg_loss = 0.
     n = len(patterns_train)
@@ -58,8 +58,9 @@ if __name__ == "__main__":
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--time-budget', type=int, default=100000000)
     parser.add_argument('--do-weighted-averaging', action='store_true')
-    parser.add_argument('--debug-multiplier', type=float, default=0.0)
+    parser.add_argument('--debug-multiplier', type=float, default=0)
     parser.add_argument('--sample', type=str, default='uniform')
+    parser.add_argument('--gap-check', type=int, default=50)
 
 
     options = parser.parse_args()

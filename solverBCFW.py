@@ -47,6 +47,7 @@ def solverBCFW(param, options=None):
     if options['do_weighted_averaging']:
         w_avg = model['w']
         l_avg = 0.
+        
     if options['debug_multiplier'] == 0:
         debug_iter = n
         options['debug_multiplier'] = 100
@@ -108,14 +109,14 @@ def solverBCFW(param, options=None):
                 model_debug['l'] = l_avg if options['do_weighted_averaging'] else l
 
                 f = -objective_function(model_debug['w'], model_debug['l'], lambd)
-                gap = duality_gap(param, maxOracle, model_debug, lambd)
+                gap, _, __ = duality_gap(param, maxOracle, model_debug, lambd)
                 primal = f + gap
                 train_error = average_loss(param, maxOracle, model_debug)
                 print("Pass {} (iteration {}), SVM primal = {:.6f}, SVM dual = {:.6f}, duality gap = {:.6f}, train error = {:.6f}".format(
                     k+1, k+1, primal, f, gap, train_error))
 
                 progress['primal'].append(primal)
-                progress['dual'].append(dual)
+                progress['dual'].append(f)
                 progress['eff_pass'].append(k * 1. / n)
                 progress['train_error'].append(train_error)
                 if 'test_data' in options and isinstance(options['test_data'], dict) and 'patterns' in options['test_data']:
@@ -137,7 +138,7 @@ def solverBCFW(param, options=None):
                 return model, progress
 
         # Outside the dummy loop
-        if options['gap_check'] and gap_check_counter >= options['gap_check']:
+        if 'gap_check' in options and gap_check_counter >= options['gap_check']:
             gap_check_counter = 0
             model_debug = {}
             model_debug['w'] = w_avg if options['do_weighted_averaging'] else model['w']

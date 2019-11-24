@@ -86,7 +86,7 @@ def solverFW(param, options=None):
 
         if options['debug']:
             f = -objective_function(model['w'], model['l'], lambd)
-            gap, _, _ = duality_gap(param, maxOracle, model, lambd)
+            gap, _, __ = duality_gap(param, maxOracle, model, lambd)
             primal = f + gap
             train_error = average_loss(param, maxOracle, model)
 

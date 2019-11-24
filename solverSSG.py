@@ -83,7 +83,7 @@ def solverSSG(param, options=None):
                 model_debug = {}
                 model_debug['w'] = w_avg if options['do_weighted_averaging'] else model['w']
 
-                f = primal_objective(param, maxOracle, model_debug, lambd)
+                primal = primal_objective(param, maxOracle, model_debug, lambd)
                 train_error = average_loss(param, maxOracle, model_debug)
                 print("Pass {} (iteration {}), SVM primal = {:.6f}, train error = {:.6f}".format(
                     k+1, k+1, primal, train_error))
