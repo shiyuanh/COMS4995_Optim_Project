@@ -2,9 +2,10 @@
 # @Author: yuchen
 # @Date:   2019-11-23 18:48:11
 # @Last Modified by:   yuchen
-# @Last Modified time: 2019-11-23 19:26:04
+# @Last Modified time: 2019-11-23 19:59:54
 
 import numpy as np 
+from IPython import embed
 
 def chain_loss(param, ytruth, ypredict):
 	return sum(ypredict != ytruth) / len(ytruth)
