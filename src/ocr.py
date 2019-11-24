@@ -12,8 +12,11 @@ import matplotlib.pyplot as plt
 
 from IPython import embed
 
+plot_path = "../plot"
+output_path = "../new_output"
+
 def ocr(options, path):
-    patterns_train, labels_train, patterns_test, labels_test = loadOCRData(path)
+    patterns_test, labels_test, patterns_train, labels_train = loadOCRData(path)
     param = {
         'patterns': patterns_train,
         'labels': labels_train,
@@ -26,10 +29,13 @@ def ocr(options, path):
         }
     }
     import os
-    if not os.path.exists('../plot'):
-        os.makedirs('../plot')
-    if not os.path.exists('../output'):
-        os.makedirs('../output')
+    if not os.path.exists(plot_path):
+        os.makedirs(plot_path)
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
+    name = "{}_{}_{}_{:.4f}".format(options.method, "wavg" if options.do_weighted_averaging else "nowavg", 
+        "line" if options.do_line_search else "noline", vars(options)['lambda'])
 
     for exp_idx in range(options.repeat):
 
@@ -65,23 +71,23 @@ def ocr(options, path):
         plt.plot(progress['eff_pass'], np.log10(progress['primal']), 'r-', label="primal")
         if 'dual' in progress:
             plt.plot(progress['eff_pass'], np.log10(progress['dual']), 'b--', label='dual')
-            np.savez("../output/{}_{}.npz".format(options.name, exp_idx), primal=progress['primal'], dual=progress['dual'], eff_pass=progress['eff_pass'], test_error=progress['test_error'])
+            np.savez("{}/{}_{}.npz".format(output_path, name, exp_idx), primal=progress['primal'], dual=progress['dual'], eff_pass=progress['eff_pass'], test_error=progress['test_error'])
         else:
-            np.savez("../output/{}_{}.npz".format(options.name, exp_idx), primal=progress['primal'], eff_pass=progress['eff_pass'], test_error=progress['test_error'])
+            np.savez("{}/{}_{}.npz".format(output_path, name, exp_idx), primal=progress['primal'], eff_pass=progress['eff_pass'], test_error=progress['test_error'])
         plt.xlabel("Effective passes")
         plt.ylabel("primal/dual in log10")
-        plt.title("{}".format(options.name))
+        plt.title("{}".format(name))
         plt.legend()
-        plt.savefig("../plot/ocr_{}_train_exp{}.png".format(options.name, exp_idx))
+        plt.savefig("{}/ocr_{}_train_exp{}.png".format(plot_path, name, exp_idx))
         # plt.show()
 
         plt.clf()
         plt.plot(progress['eff_pass'], progress['test_error'], 'g--', label="test error")
         plt.xlabel("Effective passes")
         plt.ylabel("Test error")
-        plt.title("{}".format(options.name))
+        plt.title("{}".format(name))
         plt.legend()
-        plt.savefig("../plot/ocr_{}_test_exp{}.png".format(options.name, exp_idx))
+        plt.savefig("{}/ocr_{}_test_exp{}.png".format(plot_path, name, exp_idx))
 
 
 if __name__ == "__main__":
@@ -99,7 +105,7 @@ if __name__ == "__main__":
     parser.add_argument('--gap-check', type=int, default=10)
     parser.add_argument('--method', choices=['ssg', 'fw', 'bcfw'])
 
-    parser.add_argument('--name', type=str, default='tmp')
+    # parser.add_argument('--name', type=str, default='tmp')
     parser.add_argument('--repeat', type=int, default=1)
 
     # Example:
