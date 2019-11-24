@@ -11,7 +11,10 @@ def chain_oracle(param, model, xi, yi=None, debug=False):
     num_states = xi['num_states']
 
     weight = weightVec2Cell(w, num_states, num_dims)
-    theta_unary = np.matmul(weight[0].T, xi['data'])
+    theta_unary = np.matmul(weight[0].T, xi['data']) # xi data same, weight same, but result diff
+
+    # if debug:
+    #     import pdb; pdb.set_trace()
 
     theta_unary[:, 0] = theta_unary[:, 0] + weight[1].squeeze()
     theta_unary[:, -1] = theta_unary[:, -1] + weight[2].squeeze()
@@ -24,8 +27,8 @@ def chain_oracle(param, model, xi, yi=None, debug=False):
             idx = yi[i]
             theta_unary[idx, i] = theta_unary[idx, i] - 1. / L
 
-    if debug:
-        embed()
+    # if debug:
+    #     embed()
     label = chain_logDecode(theta_unary.T, theta_pair)
     label = label.T
     return label.squeeze()
@@ -33,12 +36,12 @@ def chain_oracle(param, model, xi, yi=None, debug=False):
 def weightVec2Cell(w, num_states, d):
     idx = num_states * d
     weight = []
-    weight.append(np.reshape(w[:idx], (d, num_states)))
+    weight.append(np.reshape(w[:idx], (d, num_states), order='F'))
     weight.append(w[idx: idx + num_states])
     idx += num_states
     weight.append(w[idx: idx + num_states])
     idx += num_states
-    weight.append(np.reshape(w[idx:], (num_states, num_states)))
+    weight.append(np.reshape(w[idx:], (num_states, num_states), order='F'))
     return weight
 
 def chain_logDecode(logNodePot, logEdgePot):
