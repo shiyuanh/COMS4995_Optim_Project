@@ -35,7 +35,8 @@ def solverBCFW(param, options=None):
     lambd = options['lambda']
     phi1 = phi(param, patterns[0], labels[0])
     d = len(phi1)
-    progress = []
+    model = {}
+    progress = {}
 
     model['w'] = np.zeros((d, ))
     w_mat = np.zeros((d, n))
@@ -43,7 +44,7 @@ def solverBCFW(param, options=None):
     l = 0
     l_mat = np.zeros((n, ))
 
-    if options['do_weight_averaging']:
+    if options['do_weighted_averaging']:
         w_avg = model['w']
         l_avg = 0.
     if options['debug_multiplier'] == 0:
@@ -81,7 +82,7 @@ def solverBCFW(param, options=None):
             l_s = 1. / n * loss_i
             assert ((loss_i - model['w'].dot(psi_i)) >= -1e-12)
 
-            if options.do_line_search:
+            if options['do_line_search']:
                 gamma_opt = (model['w'].dot(w_mat[:, i] - w_s) - 1. / lambd * (l_mat[i] - l_s)) / ((w_mat[:, i] - w_s).dot(w_mat[:, i] - w_s) + eps)
                 gamma = max(0, min(1, gamma_opt))
             else:
@@ -133,7 +134,7 @@ def solverBCFW(param, options=None):
                     model['l'] = l_avg
                 else:
                     model['l'] = l
-                return
+                return model, progress
 
         # Outside the dummy loop
         if options['gap_check'] and gap_check_counter >= options['gap_check']:

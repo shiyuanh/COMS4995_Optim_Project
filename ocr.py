@@ -1,7 +1,9 @@
 
 from chain_utils import *
 from chain_featuremap import chain_featuremap
+from solverBCFW import solverBCFW
 from solverFW import solverFW 
+from solverSSG import solverSSG
 from loadOCR import loadOCRData
 
 import argparse
@@ -20,7 +22,9 @@ def ocr(options, path):
         'featureFn': chain_featuremap
     }
 
-    model, progress = solverFW(param, options)
+    # model, progress = solverFW(param, options)
+    # model, progress = solverSSG(param, options)
+    model, progress = solverBCFW(param, options)
 
     avg_loss = 0.
     n = len(patterns_train)
@@ -53,6 +57,10 @@ if __name__ == "__main__":
     parser.add_argument('--do-line-search', action='store_true')
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--time-budget', type=int, default=100000000)
+    parser.add_argument('--do-weighted-averaging', action='store_true')
+    parser.add_argument('--debug-multiplier', type=float, default=0.0)
+    parser.add_argument('--sample', type=str, default='uniform')
+
 
     options = parser.parse_args()
     ocr(options, 'data/letter.data')
