@@ -86,7 +86,7 @@ def solverSSG(param, options=None):
                 primal = primal_objective(param, maxOracle, model_debug, lambd)
                 train_error = average_loss(param, maxOracle, model_debug)
                 print("Pass {} (iteration {}), SVM primal = {:.6f}, train error = {:.6f}".format(
-                    k+1, k+1, primal, train_error))
+                    int(k/n), k+1, primal, train_error))
 
                 progress['primal'].append(primal)
                 progress['eff_pass'].append(k * 1. / n)
@@ -105,15 +105,9 @@ def solverSSG(param, options=None):
                 print("Time budget exceeded.")
                 if options['do_weight_averaging']:
                     model['w'] = w_avg
-                    model['l'] = l_avg
-                else:
-                    model['l'] = l
                 return model, progress
 
     if options['do_weighted_averaging']:
         model['w'] = w_avg
-        model['l'] = l_avg
-    else:
-        model['l'] = l
 
     return model, progress

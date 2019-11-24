@@ -22,9 +22,15 @@ def ocr(options, path):
         'featureFn': chain_featuremap
     }
 
-    # model, progress = solverFW(param, options)
-    model, progress = solverSSG(param, options)
-    # model, progress = solverBCFW(param, options)
+    if options.method == 'ssg':
+        model, progress = solverSSG(param, options)
+    elif options.method == 'fw':
+        model, progress = solverFW(param, options)
+    elif options.method =='bcfw':
+        model, progress = solverBCFW(param, options)
+    else:
+        print("Invalid method")
+        return
 
     avg_loss = 0.
     n = len(patterns_train)
@@ -61,7 +67,7 @@ if __name__ == "__main__":
     parser.add_argument('--debug-multiplier', type=float, default=0)
     parser.add_argument('--sample', type=str, default='uniform')
     parser.add_argument('--gap-check', type=int, default=50)
-
+    parser.add_argument('--method', choices=['ssg', 'fw', 'bcfw'])
 
     options = parser.parse_args()
     ocr(options, 'data/letter.data')

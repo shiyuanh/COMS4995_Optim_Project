@@ -47,7 +47,7 @@ def solverBCFW(param, options=None):
     if options['do_weighted_averaging']:
         w_avg = model['w']
         l_avg = 0.
-        
+
     if options['debug_multiplier'] == 0:
         debug_iter = n
         options['debug_multiplier'] = 100
@@ -113,7 +113,7 @@ def solverBCFW(param, options=None):
                 primal = f + gap
                 train_error = average_loss(param, maxOracle, model_debug)
                 print("Pass {} (iteration {}), SVM primal = {:.6f}, SVM dual = {:.6f}, duality gap = {:.6f}, train error = {:.6f}".format(
-                    k+1, k+1, primal, f, gap, train_error))
+                    int(k/n), k+1, primal, f, gap, train_error))
 
                 progress['primal'].append(primal)
                 progress['dual'].append(f)
@@ -126,7 +126,7 @@ def solverBCFW(param, options=None):
                     test_error = average_loss(param_debug, maxOracle, model_debug)
                     progress['test_error'].append(test_error)
 
-                debug_iter = min(debug_iter + n, int(debug_iter + (1 + options['debug_multiplier'] / 100.)))
+                debug_iter = min(debug_iter + n, int(debug_iter + (1 + options['debug_multiplier'] * n / 100.)))
             t_elapsed = time.time() - tic
             if (t_elapsed / 60. > options['time_budget']):
                 print("Time budget exceeded.")
