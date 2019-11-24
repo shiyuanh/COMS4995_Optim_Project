@@ -8,10 +8,9 @@ def load_ocr(ocr_data):
     labels_train = list()
     patterns_test = list()
     labels_test = list()
-    idx_train = 1
-    idx_test = 1
 
     for entry in ocr_data:
+        #print(entry['word_id'])
         pattern = dict()
         pattern['data'] = list()
         for pixel in entry['pixel']:
@@ -36,7 +35,7 @@ def load_ocr(ocr_data):
     assert len(patterns_train) == len(labels_train)
     assert len(patterns_test) == len(labels_test)
     print('========> Done Loading converted OCR')
-    return patterns_train, labels_train, patterns_test, labels_test, idx_train, idx_test
+    return patterns_train, labels_train, patterns_test, labels_test
 
 
 def convert_ocr(ocr_file):
@@ -64,6 +63,7 @@ def convert_ocr(ocr_file):
                 cur_word['word'] = list()
                 cur_word['pixel'] = list()
                 cur_word['fold'] = fold
+                cur_word['word_id'] = word_id
                 cur_word_id = word_id
                 #if word_id == 2:
                 #    print(ocr_data)
@@ -72,6 +72,7 @@ def convert_ocr(ocr_file):
             cur_word['word'].append(ord(letter) - ord('a'))
             cur_word['pixel'].append(pij)
             assert cur_word['fold'] == fold
+            assert cur_word['word_id'] == word_id
 
         ocr_data.append(cur_word.copy())
 
@@ -85,7 +86,7 @@ if __name__ == '__main__':
 
     #print(ocr_data[-1])
     #print(len(ocr_data))  ### 6877
-    patterns_train, labels_train, patterns_test, labels_test, idx_train, idx_test = load_ocr(ocr_data)
+    patterns_train, labels_train, patterns_test, labels_test = load_ocr(ocr_data)
 
     print(len(labels_train))  ## 626
     print(len(labels_test))  ## 6251
