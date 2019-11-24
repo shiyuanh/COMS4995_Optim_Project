@@ -1,11 +1,14 @@
 
 from chain_utils import *
 from solverFW import solverFW 
+from loadOCR import loadOCRData
 
+import argparse
 import numpy as np 
 import matplotlib.pyplot as plt
 
-def ocr(patterns_train, labels_train, patterns_test, labels_test):
+def ocr(options, path):
+	patterns_train, labels_train, patterns_test, labels_test = loadOCRData(path)
 
 	param = {
 		'patterns': patterns_train,
@@ -13,13 +16,6 @@ def ocr(patterns_train, labels_train, patterns_test, labels_test):
 		'lossFn': chain_loss,
 		'oracleFn': chain_oracle,
 		'featureFn': chain_featuremap
-	}
-	options = {
-		'lambda': 1e-2,
-		'gap_threshold': 0.1,
-		'num_passes': 100,
-		'do_line_search': True,
-		'debug': True
 	}
 
 	model, progress = solverFW(param, options)
@@ -43,4 +39,17 @@ def ocr(patterns_train, labels_train, patterns_test, labels_test):
 	plt.plot(progress['eff_pass'], progress['primal'], 'r-')
 	plt.plot(progress['eff_pass'], progress['dual'], 'b--')
 	plt.xlabel("Effective passes")
+	plt.savefig("ocr.png")
+	plt.show()
 
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description="BCFW")
+
+	parser.add_argument('--lambda', type=float, default=1e-2)
+	parser.add_argument('--gap-threshold', type=float, default=0.1)
+	parser.add_argument('--num-passes', type=int, default=100)
+	parser.add_argument('--do-line-search', action='store_true')
+	parser.add_argument('--debug', action='store_true')
+
+	options = parser.parse_args()
+	ocr(options, 'data/letter.data')

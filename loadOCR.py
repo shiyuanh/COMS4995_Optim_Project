@@ -79,6 +79,11 @@ def convert_ocr(ocr_file):
     print('====> Done converting the raw ocr data')
     return ocr_data
 
+def loadOCRData(path):
+    ocr_data = convert_ocr(path)
+    patterns_train, labels_train, patterns_test, labels_test, idx_train, idx_test = load_ocr(ocr_data)
+    return patterns_train, labels_train, patterns_test, labels_test
+
 
 if __name__ == '__main__':
     ocr = 'data/letter.data'
