@@ -2,25 +2,25 @@
 # @Author: yuchen
 # @Date:   2019-11-23 16:50:13
 # @Last Modified by:   yuchen
-# @Last Modified time: 2019-11-23 17:04:03
+# @Last Modified time: 2019-11-23 19:25:51
 
 import numpy as np
 
 def objective_function(w, b_alpha, lambd):
-	return lambd / 2. * w.dot(w) - b_alpha
+    return lambd / 2. * w.dot(w) - b_alpha
 
 def average_loss(param, maxOracle, model):
-	patterns = param['patterns']
-	labels = param['labels']
-	loss = param['lossFn']
+    patterns = param['patterns']
+    labels = param['labels']
+    loss = param['lossFn']
 
-	loss_term = 0.
-	n = len(patterns)
-	for i in range(n):
-		ystar_i = maxOracle(param, model, patterns[i])
-		loss_term += loss(param, labels[i], ystar_i)
-	loss_term /= n
-	return loss_term
+    loss_term = 0.
+    n = len(patterns)
+    for i in range(n):
+        ystar_i = maxOracle(param, model, patterns[i])
+        loss_term += loss(param, labels[i], ystar_i)
+    loss_term /= n
+    return loss_term
 
 def duality_gap(param, maxOracle, model, lambd):
     patterns = param['patterns']

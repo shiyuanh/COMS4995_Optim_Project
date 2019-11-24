@@ -2,7 +2,7 @@
 # @Author: yuchen
 # @Date:   2019-11-23 18:48:11
 # @Last Modified by:   yuchen
-# @Last Modified time: 2019-11-23 19:19:10
+# @Last Modified time: 2019-11-23 19:26:04
 
 import numpy as np 
 
@@ -47,7 +47,7 @@ def weightVec2Cell(w, num_states, d):
 def chain_logDecode(logNodePot, logEdgePot):
 	nNodes, nStates = logNodePot.shape[0], logNodePot.shape[1]
 	alpha = np.zeros((nNodes, nStates))
-	alpha[0, :] = logNodePot(0, :)
+	alpha[0, :] = logNodePot[0, :]
 	mxState = [None]
 	for n in range(1, nNodes):
 		tmp = np.tile(alpha[n-1, :].T, (1, nStates)) + logEdgePot	# ???

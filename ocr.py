@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def ocr(options, path):
-	patterns_train, labels_train, patterns_test, labels_test = loadOCRData(data_name, '../../data/')
+	patterns_train, labels_train, patterns_test, labels_test = loadOCRData(path)
 
 	param = {
 		'patterns': patterns_train,
