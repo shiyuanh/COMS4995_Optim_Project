@@ -2,7 +2,7 @@
 # @Author: yuchen
 # @Date:   2019-11-23 18:48:11
 # @Last Modified by:   yuchen
-# @Last Modified time: 2019-11-23 19:59:54
+# @Last Modified time: 2019-11-23 20:18:55
 
 import numpy as np 
 from IPython import embed
@@ -19,9 +19,9 @@ def chain_oracle(param, model, xi, yi=None):
 	weight = weightVec2Cell(w, num_states, num_dims)
 	theta_unary = np.matmul(weight[0].T, xi['data'])
 
-	theta_unary[:, 0] = theta_unary[:, 0] + weight[1]
-	theta_unary[:, -1] = theta_unary[:, -1] + weight[2]
-	theta_pair = weight[3]
+	theta_unary[:, 0] = theta_unary[:, 0] + weight[1].squeeze()
+	theta_unary[:, -1] = theta_unary[:, -1] + weight[2].squeeze()
+	theta_pair = weight[3].squeeze()
 
 	if yi is not None:
 		L = len(yi)
@@ -51,11 +51,11 @@ def chain_logDecode(logNodePot, logEdgePot):
 	alpha[0, :] = logNodePot[0, :]
 	mxState = [None]
 	for n in range(1, nNodes):
-		tmp = np.tile(alpha[n-1, :].T, (1, nStates)) + logEdgePot	# ???
-		alpha[n, :] = logNodePot[n, :] + max(tmp)
-		mxState.append(np.argmax(tmp))
+		tmp = np.tile(alpha[n-1: n, :].T, (1, nStates)) + logEdgePot
+		alpha[n, :] = logNodePot[n, :] + tmp.max(axis=1)
+		mxState.append(np.argmax(tmp, axis=1))
 	y = np.zeros((nNodes, 1))
 	y[nNodes - 1] = np.argmax(alpha[nNodes - 1, :])
 	for n in range(nNodes - 2, 1, -1):
-		y[n] = mxState[n + 1, y[n + 1]]
+		y[n] = mxState[n + 1][int(y[n + 1])]
 	return y
