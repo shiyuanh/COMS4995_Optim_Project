@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 num_states = 26
 
@@ -14,8 +15,9 @@ def load_ocr(ocr_data):
         pattern = dict()
         pattern['data'] = list()
         for pixel in entry['pixel']:
-            pixel.append(1)   ####???
+            pixel = np.append(pixel, [1])  ####???
             pattern['data'].append(pixel)
+        pattern['data'] = np.array(pattern['data']).transpose()
         pattern['num_states'] = num_states
 
         label = entry['word']
@@ -55,6 +57,9 @@ def convert_ocr(ocr_file):
             pij = entry[6:]
             pij = list(map(int, pij))
 
+            pij = np.array(pij).reshape((16,8))
+            pij = pij.transpose()
+            pij = pij.reshape((-1,))
 
             #### starting a new word
             if cur_word_id < word_id:
@@ -81,7 +86,7 @@ def convert_ocr(ocr_file):
 
 def loadOCRData(path):
     ocr_data = convert_ocr(path)
-    patterns_train, labels_train, patterns_test, labels_test, idx_train, idx_test = load_ocr(ocr_data)
+    patterns_train, labels_train, patterns_test, labels_test = load_ocr(ocr_data)
     return patterns_train, labels_train, patterns_test, labels_test
 
 
