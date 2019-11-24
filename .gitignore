@@ -1,2 +1,6 @@
 data/
 .gitignore
+__pycache__/
+output/
+plot/
+.DS_Store
