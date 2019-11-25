@@ -1,6 +1,5 @@
 import numpy as np 
 import time
-from IPython import embed
 
 def chain_loss(param, ytruth, ypredict):
     return sum(ypredict != ytruth) / len(ytruth)
