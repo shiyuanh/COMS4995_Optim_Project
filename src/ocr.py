@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--lambda', type=float, default=1e-2)
     parser.add_argument('--gap-threshold', type=float, default=0.01)
-    parser.add_argument('--num-passes', type=int, default=100)
+    parser.add_argument('--num-passes', type=int, default=120)
     parser.add_argument('--do-line-search', action='store_true')
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--time-budget', type=int, default=100000000)
